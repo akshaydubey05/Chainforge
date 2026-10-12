@@ -3,7 +3,7 @@
 **A blockchain written from scratch in Go that you can break live.**
 Proof of Work, signed transactions, Merkle trees, a P2P network with fork resolution, and a cyberpunk web UI.
 
-🔗 **Live demo:** https://YOUR-DOMAIN
+🔗 **Live demo:** ...final touches left :)
 ![demo](docs/demo.gif)
 
 ## What you can do on the live site
