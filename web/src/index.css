@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------- CYBERCORE tokens (based on the connector's "cyberpunk" preset) ---------- */
+:root {
+  --radius: 0.25rem;
+  --background: #020805;
+  --foreground: #eceff4;
+  --card: #07120d;
+  --card-foreground: #eceff4;
+  --popover: #07120d;
+  --popover-foreground: #eceff4;
+  --primary: #00ff88;
+  --primary-foreground: #00140a;
+  --secondary: #0d1d16;
+  --secondary-foreground: #eceff4;
+  --muted: #0a1712;
+  --muted-foreground: #8085a6;
+  --accent: #00e5ff;
+  --accent-foreground: #00141a;
+  --destructive: #ff3d00;
+  --destructive-foreground: #ffffff;
+  --border: #14402c;
+  --input: #14402c;
+  --ring: #00ff88;
+  --chart-1: #00ff88;
+  --chart-2: #00e5ff;
+  --chart-3: #59f8a4;
+  --chart-4: #3dd9d0;
+  --chart-5: #c7f9cc;
+}
+
+@theme inline {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", ui-monospace, monospace;
+  --font-display: "Orbitron", "Outfit", sans-serif;
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+/* ---------- background: neon grid + glow + scanlines ---------- */
+body {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--primary) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 5%, transparent) 1px, transparent 1px),
+    radial-gradient(ellipse at 15% -10%, color-mix(in srgb, var(--primary) 20%, transparent), transparent 55%),
+    radial-gradient(ellipse at 90% 110%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%);
+  background-size: 48px 48px, 48px 48px, 100% 100%, 100% 100%;
+  background-attachment: fixed;
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* ---------- neon helpers ---------- */
+.text-glow-primary {
+  text-shadow: 0 0 6px color-mix(in srgb, var(--primary) 80%, transparent),
+    0 0 18px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+.text-glow-accent {
+  text-shadow: 0 0 6px color-mix(in srgb, var(--accent) 70%, transparent),
+    0 0 16px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+/* cut-corner panels */
+/* HUD panels: neon corner brackets (in @layer components so utility classes still override) */
+@layer components {
+  .cyber-card,
+  .cyber-card-sm {
+    position: relative;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+  .cyber-card::before,
+  .cyber-card::after,
+  .cyber-card-sm::before,
+  .cyber-card-sm::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--primary);
+    filter: drop-shadow(0 0 4px var(--primary));
+  }
+  .cyber-card::before,
+  .cyber-card-sm::before {
+    top: -1px;
+    left: -1px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .cyber-card::after,
+  .cyber-card-sm::after {
+    bottom: -1px;
+    right: -1px;
+    border-left: 0;
+    border-top: 0;
+    border-color: var(--accent);
+    filter: drop-shadow(0 0 4px var(--accent));
+  }
+  .cyber-card-sm::before,
+  .cyber-card-sm::after {
+    width: 9px;
+    height: 9px;
+  }
+}
+/* glitch logo */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.glitch::before {
+  color: #00ffcc;
+  transform: translate(-2px, 0);
+  animation: glitch-a 3.2s infinite steps(1);
+}
+.glitch::after {
+  color: #00e5ff;
+  transform: translate(2px, 0);
+  animation: glitch-b 2.7s infinite steps(1);
+}
+@keyframes glitch-a {
+  0%, 92%, 100% { clip-path: inset(0 0 100% 0); }
+  93% { clip-path: inset(10% 0 60% 0); }
+  95% { clip-path: inset(55% 0 20% 0); }
+  97% { clip-path: inset(80% 0 2% 0); }
+}
+@keyframes glitch-b {
+  0%, 88%, 100% { clip-path: inset(0 0 100% 0); }
+  89% { clip-path: inset(40% 0 35% 0); }
+  91% { clip-path: inset(5% 0 80% 0); }
+  94% { clip-path: inset(70% 0 10% 0); }
+}
+
+/* new block slides in with a neon flash */
+.block-in {
+  animation: block-in 0.55s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+@keyframes block-in {
+  0% { opacity: 0; transform: translateY(-14px) scale(0.97); box-shadow: 0 0 0 transparent; }
+  40% { box-shadow: 0 0 28px color-mix(in srgb, var(--primary) 70%, transparent); }
+  100% { opacity: 1; transform: none; }
+}
+
+.pulse-neon {
+  animation: pulse-neon 1.1s ease-in-out infinite;
+}
+@keyframes pulse-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.cursor::after {
+  content: "▋";
+  margin-left: 2px;
+  animation: pulse-neon 1s steps(1) infinite;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }

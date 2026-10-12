@@ -1,0 +1,11 @@
+*.db
+*.key
+*.log
+.env
+.DS_Store
+node_modules/
+web/node_modules/
+dist/
+web/dist/
+coverage/
+*.local

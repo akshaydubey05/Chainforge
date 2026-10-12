@@ -1,0 +1,58 @@
+x-node: &node
+  build: .
+  image: chainforge:latest
+  restart: unless-stopped
+  environment:
+    PEER_KEY: ${PEER_KEY:?set PEER_KEY in .env}
+
+services:
+  node1:
+    <<: *node
+    command:
+      - -name=alpha
+      - -public-url=http://node1:8080
+      - -peers=http://node2:8080,http://node3:8080
+      - -db=/data/chain.db
+      - -wallet=/data/node.key
+      - -web=/app/web
+    volumes: ["node1:/data"]
+    ports: ["127.0.0.1:8080:8080"] # local testing only
+
+  node2:
+    <<: *node
+    command:
+      - -name=beta
+      - -public-url=http://node2:8080
+      - -peers=http://node1:8080
+      - -db=/data/chain.db
+      - -wallet=/data/node.key
+      - -web=
+    volumes: ["node2:/data"]
+
+  node3:
+    <<: *node
+    command:
+      - -name=gamma
+      - -public-url=http://node3:8080
+      - -peers=http://node1:8080
+      - -db=/data/chain.db
+      - -wallet=/data/node.key
+      - -web=
+    volumes: ["node3:/data"]
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [node1]
+
+volumes:
+  node1:
+  node2:
+  node3:
+  caddy_data:

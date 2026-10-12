@@ -1,0 +1,8 @@
+{$DOMAIN} {
+	encode zstd gzip
+
+	@p2p path /p2p/*
+	respond @p2p 404
+
+	reverse_proxy node1:8080
+}
